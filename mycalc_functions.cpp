@@ -21,7 +21,7 @@ void MyCalc::read_input(char * file_name){ //read each line, break it into the n
 
 	if (input.is_open()){
 		while (std::getline(input,line)){
-			line =line.substr(0, line.length() - 1);
+			// line =line.substr(0, line.length() - 1);
 			for (std::string::iterator it = line.begin(); it != line.end(); it++){ //to purge the unnecessary symbols and spaces
 				if ( (ispunct(*it)||isalnum(*it) ) && *it != ';'){
 				//if (isgraph(*it)|| *it !=' ' || *it != ';' || (bool)std::iscntrl(*it) ==0 ){
