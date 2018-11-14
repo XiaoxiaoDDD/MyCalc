@@ -9,6 +9,17 @@ MyCalc::MyCalc(char * input_file, char * output_file){
 		process_line(lines[i]);
 	}
 
+	//debug
+	std::cout <<"Before operation, all the variables are"<<std::endl;
+	for (int i = 0; i < variables.size(); i++){
+		std::cout <<variables[i]->name << ";" << variables[i]->status <<std::endl;
+		if (variables[i]->status=="solved"){
+			std::cout <<"the value is "<< variables[i]->value <<std::endl;
+		}
+	}
+
+	evaluation(variables);
+
 }
 
 
@@ -24,7 +35,7 @@ void MyCalc::read_input(char * file_name){ //read each line, break it into the n
 			// line =line.substr(0, line.length() - 1);
 			for (std::string::iterator it = line.begin(); it != line.end(); it++){ //to purge the unnecessary symbols and spaces
 				if ( (ispunct(*it)||isalnum(*it) ) && *it != ';'){
-				//if (isgraph(*it)|| *it !=' ' || *it != ';' || (bool)std::iscntrl(*it) ==0 ){
+				//if (isgraph(*it)|| *it !=' ' || *it != ';' || (bool)std::iscntrl(*it) ==0 )
 					processed_line.push_back(*it);
 					if (*it =='('){
 						opening_bracket.push('(');
@@ -41,8 +52,8 @@ void MyCalc::read_input(char * file_name){ //read each line, break it into the n
 
 			}
 			lines.push_back(processed_line);
-			//debug: 
-			std::cout << processed_line <<std::endl;
+			// //debug: 
+			// std::cout << processed_line <<std::endl;
 			processed_line = "";
 			while (!opening_bracket.empty()){
 				opening_bracket.pop();
@@ -79,27 +90,37 @@ void MyCalc::process_line(std::string& line){ //for each line, return the root o
 		std::vector< std::pair<Type,std::string> > elements;
 		elements = sort_out(good_variable->name, good_variable->instruction);
 
-		if (elements.size() ==1 && elements[0].first == num){
-			good_variable->status = "solved";
-			good_variable->value = std::stoi(elements[0].second);
-		}
 
-		stack< std::pair<Type,std::string> > pre_order;
-		good_variable->pre_order_expressions = in2pre(elements);
 
-		//debug
-		while (!good_variable->pre_order_expressions.empty()){
-			std::cout << good_variable->pre_order_expressions.top().second<< " ";
-			good_variable->pre_order_expressions.pop();
+		if (good_variable->name[0] == '~'){
+			good_variable->status ="broken";
 		}
-		std::cout <<std::endl;	
+		else{
+
+			if (elements.size() ==1 && elements[0].first == num){
+				good_variable->status = "solved";
+				good_variable->value = std::stoi(elements[0].second);
+			}
+
+			else{
+				good_variable->status = "unsolved"; //this contain all the unbroken but unsolved variables
+			}
+
+			stack< std::pair<Type,std::string> > pre_order;
+			good_variable->pre_order_expressions = in_a_pre(elements);
+
+			//convert pre-order to post-order
+			while (!good_variable->pre_order_expressions.empty()){
+				good_variable->post_order_expressions.push(good_variable->pre_order_expressions.top());
+				good_variable->pre_order_expressions.pop();
+			}
+		}
 	}
 
 
 }
 
-stack<std::pair<Type,std::string> > MyCalc::in2pre(std::vector<std::pair<Type,std::string> > & elements){ //convert from inorder to preorder
-	//***citing Lab 5 solution's infix2postfix member function
+stack<std::pair<Type,std::string> > MyCalc::in_a_pre(std::vector<std::pair<Type,std::string> > & elements){ //convert from inorder to preorder
 	//pre-order is the final list
 	stack< pair <Type, string> > pre_order;
 	std::pair<Type,std::string> p;
@@ -238,11 +259,11 @@ std::vector< std::pair<Type,std::string> > MyCalc::sort_out(std::string& name, s
 	}
 
 
-	//for debug:
-	for (int i =0; i< instruction_list.size(); i++){
-		std::cout <<instruction_list[i].second <<" ";
-	}
-	std::cout <<std::endl;
+	// //for debug:
+	// for (int i =0; i< instruction_list.size(); i++){
+	// 	std::cout <<instruction_list[i].second <<" ";
+	// }
+	// std::cout <<std::endl;
 	return instruction_list; //a list of pairs, which info about its type and its content
 }
 

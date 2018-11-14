@@ -1,5 +1,4 @@
 #include "mycalc.h"
-#include <vector>
 
 void read_input(char *);
 void generate_ouput();
