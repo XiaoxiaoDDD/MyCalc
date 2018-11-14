@@ -10,13 +10,13 @@ MyCalc::MyCalc(char * input_file, char * output_file){
 	}
 
 	//debug
-	std::cout <<"Before operation, all the variables are"<<std::endl;
-	for (int i = 0; i < variables.size(); i++){
-		std::cout <<variables[i]->name << ";" << variables[i]->status <<std::endl;
-		if (variables[i]->status=="solved"){
-			std::cout <<"the value is "<< variables[i]->value <<std::endl;
-		}
-	}
+	// std::cout <<"Before operation, all the variables are"<<std::endl;
+	// for (int i = 0; i < variables.size(); i++){
+	// 	std::cout <<variables[i]->name << ";" << variables[i]->status <<std::endl;
+	// 	if (variables[i]->status=="solved"){
+	// 		std::cout <<"the value is "<< variables[i]->value <<std::endl;
+	// 	}
+	// }
 
 	evaluation(variables);
 
@@ -227,6 +227,15 @@ std::vector< std::pair<Type,std::string> > MyCalc::sort_out(std::string& name, s
                 if (*it != c) break;
 			}
             it--;
+
+            // //identify unary and binary -
+            // std::string::iterator rator;
+            // rator = it--;
+
+            // if (tmp =="-" && !( isdigit(*rator) || isalpha(*rator) )){
+            // 	tmp = "~";
+            // }
+
             std::pair<Type,std::string> p;
 			p.first = opt;
 			p.second = tmp;
@@ -259,7 +268,7 @@ std::vector< std::pair<Type,std::string> > MyCalc::sort_out(std::string& name, s
 	}
 
 
-	// //for debug:
+	// //for debug: print out each units of elements
 	// for (int i =0; i< instruction_list.size(); i++){
 	// 	std::cout <<instruction_list[i].second <<" ";
 	// }
