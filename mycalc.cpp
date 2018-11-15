@@ -17,8 +17,8 @@ int main(int argc, char* argv[]){
 		}
 	}
 
-	if (ifile == "default" || ofile == "default"){
-		std::cout << "mymachine-promt >> ./mycalc -i <inputfile> -o <outfile>"<<std::endl;
+	if (ifile == "default" || ofile == "default"||argc != 5){
+		std::cerr << "mymachine-promt >> ./mycalc -i <inputfile> -o <outfile>"<<std::endl;
 		return EXIT_FAILURE;
 	}
 
