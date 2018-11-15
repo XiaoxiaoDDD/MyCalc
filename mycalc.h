@@ -34,11 +34,10 @@ private:
     int sequence(std::string);
     bool inferior(std::string , std::string );
     void evaluation(std::vector <Variable *> &);
-    int * calculate(Variable* ,string& );
+    string calculate(Variable );
     std::vector< std::pair<Type,std::string> > sort_out(std::string &,std::string &);
     bool is_operator(char &);
 	void generate_output();
-	int convert(string&);
   
 };
 
@@ -49,9 +48,8 @@ public:
 	std::string status; //solved, unsolved, broken
 	std::string instruction;
 	std::string message;
-	int value;
+	double value;
 	Variable(std::string name, std::string status);
-	Variable(std::string name, std::string status, int value);
 	stack< std::pair<Type,std::string> > pre_order_expressions;
 	stack< std::pair<Type,std::string> > post_order_expressions;
 

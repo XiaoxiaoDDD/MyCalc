@@ -4,19 +4,20 @@
 
 
 MyCalc::MyCalc(char * input_file, char * output_file){
+	std::cout <<"---test:"<<isalpha(' ')<<endl;
 	read_input(input_file);
 	for (int i = 0; i < lines.size(); i++){
 		process_line(lines[i]);
 	}
 
 	//debug
-	// std::cout <<"Before operation, all the variables are"<<std::endl;
-	// for (int i = 0; i < variables.size(); i++){
-	// 	std::cout <<variables[i]->name << ";" << variables[i]->status <<std::endl;
-	// 	if (variables[i]->status=="solved"){
-	// 		std::cout <<"the value is "<< variables[i]->value <<std::endl;
-	// 	}
-	// }
+	std::cout <<"Before operation, all the variables are"<<std::endl;
+	for (int i = 0; i < variables.size(); i++){
+		std::cout <<variables[i]->name << ";" << variables[i]->status <<std::endl;
+		if (variables[i]->status=="solved"){
+			std::cout <<"the value is "<< variables[i]->value <<std::endl;
+		}
+	}
 
 	evaluation(variables);
 
@@ -34,7 +35,7 @@ void MyCalc::read_input(char * file_name){ //read each line, break it into the n
 		while (std::getline(input,line)){
 			// line =line.substr(0, line.length() - 1);
 			for (std::string::iterator it = line.begin(); it != line.end(); it++){ //to purge the unnecessary symbols and spaces
-				if ( (ispunct(*it)||isalnum(*it) ) && *it != ';'){
+				if ( (ispunct(*it)||isalnum(*it)) && *it != ';'){
 				//if (isgraph(*it)|| *it !=' ' || *it != ';' || (bool)std::iscntrl(*it) ==0 )
 					processed_line.push_back(*it);
 					if (*it =='('){
@@ -94,12 +95,13 @@ void MyCalc::process_line(std::string& line){ //for each line, return the root o
 
 		if (good_variable->name[0] == '~'){
 			good_variable->status ="broken";
+			good_variable->name = good_variable->name.substr(1,good_variable->name.length()-1);
 		}
 		else{
 
 			if (elements.size() ==1 && elements[0].first == num){
 				good_variable->status = "solved";
-				good_variable->value = std::stoi(elements[0].second);
+				good_variable->value = std::stod(elements[0].second);
 			}
 
 			else{
@@ -190,11 +192,30 @@ std::vector< std::pair<Type,std::string> > MyCalc::sort_out(std::string& name, s
 			}
             it--;
 			if (tmp !="mod"){
-                std::pair<Type,std::string> p;
-				p.first = var;
-				p.second = tmp;
-				instruction_list.push_back(p);
-				tmp = "";
+				if (tmp.size()>3 && tmp.substr(tmp.size()-3, 3)=="mod"){
+					std::pair<Type,std::string> p;
+					p.first = var;
+					p.second = tmp.substr(0,3);
+					instruction_list.push_back(p);
+					p.first = opt;
+					p.second = '%';
+					instruction_list.push_back(p);
+					tmp="";
+
+
+				}
+
+
+				else{
+					while (tmp.back()==' '){
+						tmp.erase(tmp.back());
+					}
+	                std::pair<Type,std::string> p;
+					p.first = var;
+					p.second = tmp;
+					instruction_list.push_back(p);
+					tmp = "";
+				}
 			}
 			else{
                 std::pair<Type,std::string> p;
@@ -242,6 +263,7 @@ std::vector< std::pair<Type,std::string> > MyCalc::sort_out(std::string& name, s
 			instruction_list.push_back(p);
 			tmp = "";
 		}
+
 		else {
 			if (*it=='('){
                 std::pair<Type,std::string> p;
@@ -256,7 +278,10 @@ std::vector< std::pair<Type,std::string> > MyCalc::sort_out(std::string& name, s
 				p.second = ")";
 				instruction_list.push_back(p);
 				tmp = "";
-			}		
+			}	
+			// else if (isblank(*it)){
+			// 	tmp = "";
+			// }	
 			else{
 				std::cout <<"the abnormalty is "<< *it <<"...."<<std::endl;
 
@@ -269,10 +294,10 @@ std::vector< std::pair<Type,std::string> > MyCalc::sort_out(std::string& name, s
 
 
 	// //for debug: print out each units of elements
-	// for (int i =0; i< instruction_list.size(); i++){
-	// 	std::cout <<instruction_list[i].second <<" ";
-	// }
-	// std::cout <<std::endl;
+	for (int i =0; i< instruction_list.size(); i++){
+		std::cout <<instruction_list[i].second <<" ";
+	}
+	std::cout <<std::endl;
 	return instruction_list; //a list of pairs, which info about its type and its content
 }
 
