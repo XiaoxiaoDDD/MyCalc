@@ -2,7 +2,7 @@
 
 
 Variable::Variable (std::string name, std::string status)
-:name(name),status(status){}
+:name(name),status(status),message(""){}
 
 
 void MyCalc::evaluation(std::vector <Variable *> & variables){
@@ -36,17 +36,7 @@ void MyCalc::evaluation(std::vector <Variable *> & variables){
 			my_queue.pop();
 		}
 	}
-	std::cout <<"after the operation, the result is------"<<std::endl;
-	for (int i = 0; i < variables.size(); i++){
-		if (variables[i]->status =="solved"){
-			std::cout <<variables[i]->name<<" = "<< variables[i]->value <<std::endl;
-		}
-		else{
-			std::cout <<variables[i]->name<< " : " << variables[i]->status<<endl;
-		}
 
-		
-	}
 }
 
 
@@ -183,3 +173,25 @@ string MyCalc::calculate(Variable variable){//copy is needed
 
 }
 
+void MyCalc::generate_output(char * ofile){
+	ofstream outfile;
+	outfile.open(ofile);
+
+	// std::cout <<"after the operation, the result is------"<<std::endl;
+
+	for (int i = 0; i < variables.size(); i++){
+		if (variables[i]->status =="solved"){
+			outfile <<variables[i]->name<<" = "<< variables[i]->value <<std::endl;
+		}
+		else{
+			outfile <<variables[i]->name<< " : unable to calculate";
+			if (variables[i]->message !=""){
+				outfile <<"--"<<variables[i]->message;
+			}
+			outfile<<std::endl;
+		}
+		
+	}
+	outfile.close();
+
+}

@@ -20,6 +20,7 @@ MyCalc::MyCalc(char * input_file, char * output_file){
 	}
 
 	evaluation(variables);
+	generate_output(output_file);
 
 }
 
@@ -77,6 +78,7 @@ void MyCalc::process_line(std::string& line){ //for each line, return the root o
 	name = line.substr(0, position);
 	if (name[0] == '~'){
 		Variable * broken_variable = new Variable (name.substr(1,name.length()-1),"broken");
+		broken_variable->message ="unbalanced brackets";
 		variables.push_back(broken_variable);
 	}
 	else{

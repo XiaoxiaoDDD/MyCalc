@@ -37,7 +37,7 @@ private:
     string calculate(Variable );
     std::vector< std::pair<Type,std::string> > sort_out(std::string &,std::string &);
     bool is_operator(char &);
-	void generate_output();
+	void generate_output(char *);
   
 };
 
